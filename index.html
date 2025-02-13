@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Integration Project</title>
+  <link rel="stylesheet" href="styles.css">
+    <script src="checkinall.js"></script>
+	  <script src="updateAll.js"></script>
+	  <script src="AOSAuth.js"></script>
+	  <script src="ExecutionDetails.js"></script>
+	  <script src="ExecuteEvent.js"></script>
+    <script src="TQLSearch.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    Interface to trigger Tosca testcase
+  </header>
+  <div class="container">
+    <div class="left-side">
+      <label for="team" class="required">Team:</label>
+      <select id="team" name="team" required>
+        <option value="">--Select--</option>
+        <option value="Siebel">Siebel</option>
+        <option value="Test">Test</option>
+        <option value="GTM">GTM</option>
+        <option value="ERP">ERP</option>
+      </select>
+      <span class="error-message" id="team-error"></span>
+      <label for="testcase-name" class="required">Testcase Name:</label>
+      <input type="text" id="testcase-name" name="testcase-name" list="testcase-suggestions" required>
+      <datalist id="testcase-suggestions">
+        <!-- Suggestions will be populated here -->
+      </datalist>
+      <span class="error-message" id="testcase-name-error"></span>
+      <label for="jira-id" class="required">JiraID:</label>
+      <input type="text" id="jira-id" name="jira-id" required>
+      <span class="error-message" id="jira-id-error"></span>
+      <label for="user" class="required">User:</label>
+      <input type="text" id="user" name="user" required>
+      <span class="error-message" id="user-error"></span>
+    </div>
+    <div class="right-side">
+      <label for="testdata">Testdata:</label>
+      <select id="testdata" name="testdata" onchange="handleTestdataChange()" required>
+        <option value="">--Select--</option>
+        <option value="TDS">TDS</option>
+        <option value="Excel">Excel</option>
+      </select>
+      <span class="error-message" id="testdata-error"></span>
+      <div id="tds-row-key" class="conditional-field">
+        <label for="tds-key" class="required">TDS Row Unique Key:</label>
+        <input type="text" id="tds-key" name="tds-key" required>
+        <span class="error-message" id="tds-key-error"></span>
+      </div>
+      <div id="reinstantiation" class="conditional-field">
+        <label for="reinstantiation-select" class="required">Reinstantiation:</label>
+        <select id="reinstantiation-select" name="reinstantiation" required>
+          <option value="">--Select--</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+        <span class="error-message" id="reinstantiation-error"></span>
+      </div>
+    </div>
+    <div class="button-container">
+      <button id="execute">Execute</button>
+    </div>
+  </div>
+  
+ 	 <!-- Clear Button -->
+  <div class="clear-button-container">
+    <button id="clear-logs">Clear Logs</button>
+  </div>
+  
+  <!-- Execution Details Table -->
+    <table id="execution-details">
+        <thead>
+            <tr>
+                <th>Created Time</th>
+                <th>Testcase</th>
+				<th>Jira ID</th>
+                <th>Execution Status</th>
+                <th>Result</th>
+                <th>User</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be appended here -->
+        </tbody>
+    </table>
+	
+
+
+	
+</body>
+</html>

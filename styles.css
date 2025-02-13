@@ -1,0 +1,229 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px; /* Increase font size */
+}
+header {
+    background-color: #007BFF; /* Blue background */
+    color: white; /* White text */
+    text-align: center;
+    padding: 20px;
+    font-size: 24px; /* Larger font size for header */
+    font-weight: bold;
+}
+.container {
+    display: flex;
+    justify-content: space-around; /* Reduce gap between sections */
+    align-items: flex-start; /* Align items to the top */
+    width: 100%;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    position: relative; /* Ensure button is within the container */
+}
+.left-side, .right-side {
+    display: flex;
+    flex-direction: column;
+    width: 48%; /* Increase width to reduce gap */
+}
+label {
+    font-weight: bold;
+    margin-top: 20px; /* Add space before each label */
+    display: block; /* Ensure label is on its own line */
+}
+label.required::after {
+    content: " *";
+    color: red;
+}
+select, input[type="text"] {
+    color: blue;
+    margin-top: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 20px; /* Increase font size */
+    width: 90%; /* Reduce width by 10% */
+}
+.error-message {
+    color: red;
+    font-size: 16px;
+    display: none;
+}
+.conditional-field {
+    display: none;
+}
+.button-container {
+    display: flex;
+    justify-content: right; /* Align button to the right */
+    margin-top: 20px;
+    width: 100%;
+    position: absolute;
+    bottom: 20px; /* Position at the bottom */
+    right: 43%; /* Push button to the right */
+}
+button {
+    background-color: blue;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px; /* Increase font size */
+}
+.highlight-error {
+    border: 2px solid red;
+	
+}
+
+
+
+
+/*Table*/
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+}
+
+.button-container {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #007BFF; /* Blue color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue */
+}
+
+.clear-button-container {
+    text-align: right;
+    margin-top: 10px;
+}
+
+#clear-logs {
+    margin: 10px;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+    background-color: #007BFF; /* Blue color */
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+th {
+    background-color: #007BFF; /* Blue color */
+    color: white;
+}
+
+td {
+    color: #333;
+}
+
+td:nth-child(3) {
+    font-weight: bold;
+}
+
+td:nth-child(4) {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+td:nth-child(4):contains('Fail') {
+    color: #f44336;
+}
+
+.in-progress {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.cross-mark {
+    color: #f44336; /* Red color */
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.green-tick {
+    color: #4CAF50; /* Green color */
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+/* Add these styles to your existing styles.css */
+
+.green-tick {
+    color: green;
+}
+
+.red-cross {
+    color: red;
+}
+
+.skipped {
+    color: orange;
+}
+
+.in-progress {
+    color: blue;
+}
+
+.unknown {
+    color: gray;
+}
+.in-progress-icon {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+

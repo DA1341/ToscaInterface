@@ -361,7 +361,7 @@ function monitorExecutionStatuses() {
                         details.result = resultText;
                         saveTableData();
   console.log('Result updated successfully in table:', response);
-                        // Call updateJiraTestCase when execution is completed
+                        // Call updateJiraTestCase when execution is completed.
                         updateJiraTestCase(details.jiraId, Jira_TestCaseIDField, "Passed")
                             .then(response => {
                                 console.log('JIRA test case updated successfully:', response);

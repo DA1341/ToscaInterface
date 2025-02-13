@@ -320,6 +320,7 @@ function updateTableDataWithExecutionId(createdTime, executionId) {
     localStorage.setItem('tableData', JSON.stringify(tableData));
 }
 
+
 function monitorExecutionStatuses() {
     const tableData = JSON.parse(localStorage.getItem('tableData')) || [];
     tableData.forEach(details => {
@@ -330,19 +331,18 @@ function monitorExecutionStatuses() {
                     updateRowStatus(row, statusData.status, statusData.isResultImported ? 'Result Imported' : 'In Progress');
                 }
                 details.executionStatus = statusData.status;
-               details.result = statusData.isResultImported ? 'Result Imported' : 'In Progress';
-              // saveTableData();
+                details.result = statusData.isResultImported ? 'Result Imported' : 'In Progress';
 
-         
+                if (statusData.status === 'Completed') {
                     ExecutionDetails(details.executionId, EventResultSummary).then(summaryData => {
                         const resultText = Object.entries(summaryData)
                             .filter(([key, value]) => value !== 0)
                             .map(([key, value]) => {
                                 switch (key) {
                                     case 'passed':
-                                        return `<span class="green-tick">&#10004;</span> ${value}`; // Green tick mark
+                                        return `<span class="green-tick">Passed:</span> ${value}`; // Green tick mark &#10004
                                     case 'failed':
-                                        return `<span class="red-cross">&#10060;</span> ${value}`; // Red cross mark
+                                        return `<span class="red-cross">Failed:</span> ${value}`; // Red cross mark &#10060;
                                     case 'skipped':
                                         return `<span class="skipped">Skipped:</span> ${value}`;
                                     case 'inProgress':
@@ -354,24 +354,31 @@ function monitorExecutionStatuses() {
                                 }
                             })
                             .join(', ');
-saveTableData();
+
                         if (row) {
                             row.cells[4].innerHTML = resultText;
-							
                         }
                         details.result = resultText;
                         saveTableData();
+
+                        // Call updateJiraTestCase when execution is completed
+                        updateJiraTestCase(details.jiraId, Jira_TestCaseIDField, "Passed")
+                            .then(response => {
+                                console.log('JIRA test case updated successfully:', response);
+                            })
+                            .catch(error => {
+                                console.error('Error updating JIRA test case:', error);
+                            });
                     }).catch(error => {
                         console.error('Error fetching result summary:', error);
                     });
-                
+                }
             }).catch(error => {
                 console.error('Error checking status:', error);
             });
         }
     });
 }
-
 
 
 

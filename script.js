@@ -326,7 +326,7 @@ function updateTableDataWithExecutionId(createdTime, executionId) {
 function monitorExecutionStatuses() {
     const tableData = JSON.parse(localStorage.getItem('tableData')) || [];
     tableData.forEach(details => {
-        if (details.executionId &&  details.executionStatus == 'Queued' && details.executionStatus == 'In Progress') {
+        if (details.executionId && details.executionStatus !== 'Completed' && details.executionStatus !== 'Execution trigger failed') {
             ExecutionDetails(details.executionId, EventStatus).then(statusData => {
                 const row = document.querySelector(`tr[data-execution-id="${details.executionId}"]`);
                 if (row) {

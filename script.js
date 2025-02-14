@@ -7,6 +7,9 @@ const Endpoint = "https://trclic.zebra.com:9885"; // Added global variable
 const EventStatus = "Status";
 const EventResults = "results";
 const EventResultSummary = "Results/summary";
+const JIRA_BASE_URL = 'https://jira.zebra.com';
+const JIRA_API_KEY = 'NjIzNDc0MTM5MDExOr8rL80LHLKfi20uQ2iyATlgfg7h';
+const Jira_TestCaseIDField = "customfield_10613";
 
 
 // Global headers object
@@ -320,51 +323,51 @@ function updateTableDataWithExecutionId(createdTime, executionId) {
     localStorage.setItem('tableData', JSON.stringify(tableData));
 }
 
-
 function monitorExecutionStatuses() {
     const tableData = JSON.parse(localStorage.getItem('tableData')) || [];
     tableData.forEach(details => {
-        if (details.executionId && details.executionStatus !== 'Completed' && details.executionStatus !== 'Execution trigger failed') {
+        if (details.executionId &&  details.executionStatus == 'Queued' && details.executionStatus == 'In Progress') {
             ExecutionDetails(details.executionId, EventStatus).then(statusData => {
                 const row = document.querySelector(`tr[data-execution-id="${details.executionId}"]`);
                 if (row) {
                     updateRowStatus(row, statusData.status, statusData.isResultImported ? 'Result Imported' : 'In Progress');
                 }
                 details.executionStatus = statusData.status;
-                details.result = statusData.isResultImported ? 'Result Imported' : 'In Progress';
+               details.result = statusData.isResultImported ? 'Result Imported' : 'In Progress';
+              // saveTableData();
 
-                if (statusData.status === 'Completed') {
-                    ExecutionDetails(details.executionId, EventResultSummary).then(summaryData => {
+              if (statusData.status === 'Completed') {
+                    ExecutionDetails(details.executionId, EventResultSummary).then(async summaryData => {
                         const resultText = Object.entries(summaryData)
                             .filter(([key, value]) => value !== 0)
                             .map(([key, value]) => {
                                 switch (key) {
                                     case 'passed':
-                                        return `<span class="green-tick">Passed:</span> ${value}`; // Green tick mark &#10004
+                                        return 'Passed'; // Green tick mark
                                     case 'failed':
-                                        return `<span class="red-cross">Failed:</span> ${value}`; // Red cross mark &#10060;
+                                        return 'Failed'; // Red cross mark
                                     case 'skipped':
-                                        return `<span class="skipped">Skipped:</span> ${value}`;
+                                        return 'Skipped';
                                     case 'inProgress':
-                                        return `<span class="in-progress-icon">&#x27F3;</span> ${value}`; // Round running circle
+                                        return 'InProgress'; // Round running circle
                                     case 'unknown':
-                                        return `<span class="unknown">Unknown:</span> ${value}`;
+                                        return 'Unknown';
                                     default:
                                         return `${key}: ${value}`;
                                 }
                             })
                             .join(', ');
-
+saveTableData();
                         if (row) {
                             row.cells[4].innerHTML = resultText;
-                        }
-                        details.result = resultText;
+                            }
+                            details.result = resultText;
                         saveTableData();
-  console.log('Result updated successfully in table:', response);
-                        // Call updateJiraTestCase when execution is completed.
-                        updateJiraTestCase(details.jiraId, Jira_TestCaseIDField, "Passed")
+
+    // Call updateJiraTestCase when execution is completed
+                        updateJiraTestCase(details.jiraId, Jira_TestCaseIDField, resultText)
                             .then(response => {
-                                console.log('JIRA test case updated successfully:', response);
+                                //console.log('JIRA test case updated successfully:', response);
                             })
                             .catch(error => {
                                 console.error('Error updating JIRA test case:', error);
@@ -372,14 +375,13 @@ function monitorExecutionStatuses() {
                     }).catch(error => {
                         console.error('Error fetching result summary:', error);
                     });
-                }
+                  }
             }).catch(error => {
                 console.error('Error checking status:', error);
             });
         }
     });
 }
-
 
 
 
@@ -390,4 +392,49 @@ function clearLogs() {
 
     // Clear the localStorage
     localStorage.removeItem('tableData');
+}
+
+function loadScript(url, callback) {
+  const script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = url;
+
+  script.onload = () => {
+      if (callback) callback();
+  };
+
+  document.head.appendChild(script);
+}
+
+ async function updateJiraTestCase(issueKey, fieldId, fieldValue) {
+  
+
+    try {
+        const response = await fetch(
+            `http://localhost:3000/updateJira`,
+
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer NjIzNDc0MTM5MDExOr8rL80LHLKfi20uQ2iyATlgfg7h'
+                },
+                body: JSON.stringify({
+                    issueKey: issueKey,
+                   fieldID:fieldId,
+                   fieldValue:fieldValue
+                })
+            }
+        );
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('JIRA test case updated successfully', { [fieldId]: fieldValue });
+        return data;
+    } catch (error) {
+        console.error('Error updating JIRA test case:', error);
+        throw error;
+    }
 }

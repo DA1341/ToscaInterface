@@ -1,40 +1,37 @@
-(async function(global) {
-  async function updateJiraTestCase(issueKey, fieldId, fieldValue) {
-    const username = 'DA1341';
-    const password = 'Cheers@54321';
-    const credentials = btoa(`${username}:${password}`);
-	
-	console.log('fieldValue',  { [fieldId]: fieldValue });
-    
+
+
+// updateJiraTestCase.js
+
+async function updateJiraTestCase(issueKey, fieldId, fieldValue) {
+  
+
     try {
-      const response = await fetch(
-        `${JIRA_BASE_URL}/rest/api/2/issue/${issueKey}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${credentials}`
-          },
-          body: JSON.stringify({
-            fields: {
-              [fieldId]: fieldValue
+        const response = await fetch(
+            `http://localhost:3000/updateJira`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer NjIzNDc0MTM5MDExOr8rL80LHLKfi20uQ2iyATlgfg7h'
+                },
+                body: JSON.stringify({
+                    issueKey: issueKey,
+                   fieldID:fieldId,
+                   fieldValue:fieldValue
+                })
             }
-          })
+        );
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-      );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log('JIRA test case updated successfully', { [fieldId]: fieldValue });
-      return data;
+        const data = await response.json();
+        console.log('JIRA test case updated successfully', { [fieldId]: fieldValue });
+        return data;
     } catch (error) {
-      console.error('Error updating JIRA test case:', error);
-      throw error;
+        console.error('Error updating JIRA test case:', error);
+        throw error;
     }
-  }
+}
 
-  global.updateJiraTestCase = updateJiraTestCase;
-})(window);
+module.exports = updateJiraTestCase;
